@@ -73,3 +73,6 @@ fi
 
 
 
+#######################
+# start the LCD script
+/usr/bin/python /home/pi/RPi-Jukebox-RFID/components/displays/SPI_ST7789/now_playing.py & 

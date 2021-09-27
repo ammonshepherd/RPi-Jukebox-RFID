@@ -15,11 +15,16 @@ from PIL import ImageDraw
 from PIL import ImageFont
 
 HOMEPATH = "/home/pi/RPi-Jukebox-RFID"
-DEFAULT_IMG = "/home/pi/RPi-Jukebox-RFID/shared/logo.png"
+DEFAULT_IMG = f"{HOMEPATH}/components/displays/SPI_ST7789/logo.png"
 
 # Grab the path to the Audio Folders
 with open(f"{HOMEPATH}/settings/Audio_Folders_Path", 'r') as audio:
     AFP = audio.read().replace("\n", "")
+
+with open(f"{HOMEPATH}/settings/PhonieboxInstall.conf", 'r') as conf:
+    for line in conf:
+        if "WIFIip=" in line:
+            IP = line.replace("\n", "").replace("WIFIip=", "").strip('"')
 
 # Create the display object
 disp = ST7789.ST7789(
@@ -36,9 +41,10 @@ disp.begin()
 previous = ''
 
 while True:
+    sleep(0.5)
     # Check if anything is playing or has been played. On boot up, nothing has
     # been played, so file, artist, title, etc don't exist
-    info = requests.get('http://192.168.86.33/api/player.php').json()
+    info = requests.get(f'http://{IP}/api/player.php').json()
 
     if 'file' in info:
 
